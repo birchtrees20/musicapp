@@ -3,5 +3,6 @@
 
 <template>
   <main>
+    <p>asdfasdf</p>
   </main>
 </template>
