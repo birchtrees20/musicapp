@@ -10,6 +10,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "firebase": "^10.7.1",
     "vue": "^3.3.10",
     "vue-router": "^4.2.5"
   },
