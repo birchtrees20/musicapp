@@ -25,19 +25,21 @@ onMounted(async () => {
 
 <template>
   <div class="sidebar">
-    <div class="side-title">Bands</div>
+    <div class="side-title">BANDS</div>
     <div @click="" class="band-card">
-      <h2 class="band-name">+ Create a band</h2>
+      <h2 class="band-name"><font-awesome-icon class="band-icon" :icon="['fas', 'plus']" />Create</h2>
     </div>
     <div v-for="band in bands" :key="band.id" class="band-card">
-      <h2 class="band-name">{{ band.name }}</h2>
+      <h2 class="band-name">
+        <font-awesome-icon class="band-icon" :icon="['fas', 'drum']" />
+        {{ band.name }}
+      </h2>
     </div>
   </div>
 </template>
 
 <style>
 .sidebar {
-  grid-area: sidebar;
   height: 100vh;
   width: 150px;
   display: flex;
@@ -46,14 +48,14 @@ onMounted(async () => {
   border-top-width: 0;
   border-bottom-width: 0;
   border-left-width: 0;
+  border-right-width: 1px;
   border-style: solid;
   border-color: gray;
 }
 
 .side-title {
   background-color: white;
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
   padding-left: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -72,6 +74,10 @@ onMounted(async () => {
   display: flex;
   padding-left: 20px;
   font-size: 15px;
+}
+
+.band-icon {
+  margin-right:5px;
 }
 
 .band-card {

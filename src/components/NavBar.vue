@@ -1,27 +1,26 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import SearchBar from "./SearchBar.vue";
-import { onBeforeMount } from 'vue';
-import { useStore } from 'vuex';
+import { onBeforeMount } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 
 onBeforeMount(() => {
-  store.dispatch('fetchUser');
+  store.dispatch("fetchUser");
 });
-
 
 const user = store.state.user;
 </script>
 
 <template>
-  <div class="logo">Project name</div>
+  <RouterLink class="logo" to="/"><font-awesome-icon class="logo-icon" :icon="['fas', 'guitar']" />BandCollab</RouterLink>
   <SearchBar class="search" />
   <div class="nav-routes">
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
-    <button v-if="$store.state.user" @click="$store.dispatch('logout')">Logout</button>
+    <div class="logout-button" v-if="$store.state.user" @click="$store.dispatch('logout')">
+      Logout
+    </div>
     <RouterLink v-else to="/login">Login</RouterLink>
   </div>
 </template>
@@ -33,6 +32,13 @@ const user = store.state.user;
   width: 33%;
   display: flex;
   justify-content: start;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.logo .logo-icon {
+  padding-right: 10px;
 }
 
 .search {
@@ -48,8 +54,14 @@ const user = store.state.user;
 
 .nav-routes a {
   text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: large;
+  margin-left: 15px;
+  color: black;
+}
+
+.logout-button {
+  cursor: pointer;
+  font-size: large;
   margin-left: 15px;
 }
 </style>

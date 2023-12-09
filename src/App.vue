@@ -9,11 +9,14 @@ import NavBar from "./components/NavBar.vue";
       <NavBar />
     </nav>
   </header>
-  <RouterView />
+  <body>
+    <RouterView />
+  </body>
 </template>
 
 <style scoped>
 nav {
+  font-family: Helvetica, sans-serif;
   font-size: 12px;
   justify-content: space-between;
   padding-top: 5px;
@@ -25,8 +28,14 @@ nav {
   border-top-width: 0;
   border-right-width: 0;
   border-left-width: 0;
+  border-bottom-width: 1px;
   border-style: solid;
   border-color:gray;
 }
 
+body {
+  font-family: Helvetica, sans-serif;
+  margin-left: 200px;
+  margin-right: 200px;
+}
 </style>
