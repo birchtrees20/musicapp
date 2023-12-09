@@ -1,18 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { auth } from '../firebase'
 
-import HomeView from '../views/HomeView.vue'
-import Login from '../views/Login.vue'
-import AboutView from '../views/AboutView.vue'
-import ProfileView from '../views/ProfileView.vue'
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('@/views/HomeView.vue'),
       meta: {
         requiresAuth: false
       }
@@ -20,17 +15,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import('@/views/Login.vue')
     },
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: () => import('@/views/AboutView.vue')
     },
     {
       path: '/profile/:userID',
       name: 'profile',
-      component: ProfileView,
+      component: () => import('@/views/ProfileView.vue'),
       props: true,
       meta: {
         requiresAuth: false
@@ -39,7 +34,7 @@ const router = createRouter({
     {
       path: '/bands',
       name: 'bands',
-      component: () => import("@/views/BandsView.vue")
+      component: () => import('@/views/BandsView.vue')
     }
   ]
 })
