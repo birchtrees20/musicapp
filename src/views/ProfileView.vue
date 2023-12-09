@@ -1,6 +1,7 @@
 <template>
     <main>
-      <h1>Profile {{ userProfileEmail }}</h1>
+      <h1>{{ userName }} - Profile</h1>
+      <h1>{{ userProfileEmail }}</h1>
       <ul>
         <li v-for="instrument in currentUser" :key="instrument.id">
           <h2>Instruments:</h2>
@@ -28,6 +29,8 @@
   import { ref, watchEffect, onUnmounted } from "vue";
   import { defineProps, defineEmits } from 'vue';
   import { auth } from "@/firebase/index.js";
+  import { emailToName } from '@/helpers/emailFormat.js';
+
   
   const props = defineProps(['userID']);
   const emit = defineEmits();
@@ -37,6 +40,7 @@
   const currentUser = ref();
 
   const userProfileEmail = ref('')
+  const userName = ref('')
 
   const currentUserAuthID = ref(''); //retrieved by auth
   const newInstrument = ref('');
@@ -57,6 +61,8 @@
       let user = {
         "userID": doc.data().userID,
         "email": doc.data().email,
+        "firstName": doc.data().firstName,
+        "lastName": doc.data().lastName,
         "instruments": userInstruments
       };
       allUsers.value.push(user);
@@ -111,33 +117,9 @@
   // Check if there is a user in the array
   if (currentUser.value.length > 0) {
     userProfileEmail.value = currentUser.value[0].email;
+    userName.value = currentUser.value[0].firstName + currentUser.value[0].lastName;
   }
 });
-
-function processEmail(email) {
-  // Remove everything after and including '@'
-  const username = email.split('@')[0];
-
-  // Check if there is a dot
-  if (username.includes('.')) {
-    // Replace dot with space and capitalize each word
-    const formattedUsername = username
-      .split('.')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-
-    // Add a dot at the end
-    return formattedUsername + '.';
-  } else {
-    // If there is no dot, just return the original username
-    return username;
-  }
-}
-
-// Example usage:
-const inputEmail = "paddy.den@example.com";
-const result = processEmail(inputEmail);
-console.log(result);  // Output: "Example Email."
   
   </script>
   
@@ -194,4 +176,4 @@ console.log(result);  // Output: "Example Email."
     margin-bottom: 16px;
   }
   </style>
-  
+  @/helpers/emailFormat.js

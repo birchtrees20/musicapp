@@ -3,7 +3,7 @@
       <h1>All Members</h1>
       <div class="member-tiles">
         <router-link v-for="user in allUsers" :key="user.userID" :to="{ name: 'profile', params: { userID: user.userID } }" class="member-tile">
-          <h2>{{ user.email }}</h2>
+          <h2>{{ emailToName(user.email) }}</h2>
           <ul>
             <li v-for="instrument in user.instruments" :key="instrument">{{ instrument }}</li>
           </ul>
@@ -16,9 +16,9 @@
   import { ref, onUnmounted } from 'vue';
   import { onSnapshot, collection } from 'firebase/firestore';
   import { db } from '@/firebase/index.js';
+  import { emailToName } from '@/helpers/emailFormat';
   
   const allUsers = ref([]);
-  
   onSnapshot(collection(db, 'users'), (querySnapshot) => {
     allUsers.value = [];
     querySnapshot.forEach((doc) => {
@@ -26,6 +26,8 @@
       let user = {
         "userID": doc.data().userID,
         "email": doc.data().email,
+        "firstName": doc.data().firstName,
+        "lastName": doc.data().lastName,
         "instruments": userInstruments
       };
       allUsers.value.push(user);

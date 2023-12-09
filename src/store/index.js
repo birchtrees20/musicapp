@@ -57,34 +57,36 @@ export default createStore({
         }
       },
       
-    async register({ commit }, details) {
-      const { email, password } = details;
-
-      try {
-        // 1. Create user in Firebase Authentication
-        const { user } = await createUserWithEmailAndPassword(auth, email, password);
-
-        // 2. Create a user document in Firestore
-        const userDocRef = doc(db, 'users', user.uid);
-        await setDoc(userDocRef, {
-          userID: user.uid,
-          email: email,
-          // You can add other fields as needed
-        });
-
-        // 3. Dispatch a mutation or commit to update the state or handle other logic
-        commit('SET_USER', { userID: user.uid, email });
-
-        // Additional logic or actions can be added here
-
-        // 4. Return the user data or any other information you may need
-        return user;
-      } catch (error) {
-        // Handle registration errors
-        console.error('Registration error:', error.message);
-        throw error; // Rethrow the error to be caught by the calling code
-      }
-    },
+      async register({ commit }, userDetails) {
+        const { email, password, firstName, lastName } = userDetails;
+    
+        try {
+          // 1. Create user in Firebase Authentication
+          const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    
+          // 2. Create a user document in Firestore
+          const userDocRef = doc(db, 'users', user.uid);
+          await setDoc(userDocRef, {
+            userID: user.uid,
+            email: email,
+            firstName: firstName, // Add first name to Firestore
+            lastName: lastName,   // Add last name to Firestore
+            // You can add other fields as needed
+          });
+    
+          // 3. Dispatch a mutation or commit to update the state or handle other logic
+          commit('SET_USER', { userID: user.uid, email, firstName, lastName });
+    
+          // Additional logic or actions can be added here
+    
+          // 4. Return the user data or any other information you may need
+          return user;
+        } catch (error) {
+          // Handle registration errors
+          console.error('Registration error:', error.message);
+          throw error; // Rethrow the error to be caught by the calling code
+        }
+      },
         async logout ({commit}) {
             await signOut(auth)
 
