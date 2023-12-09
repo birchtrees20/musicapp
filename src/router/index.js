@@ -6,6 +6,7 @@ import Login from '../views/Login.vue'
 import AboutView from '../views/AboutView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import MembersView from '../views/MembersView.vue'
+import InstrumentView from '../views/InstrumentView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,15 @@ const router = createRouter({
       path: '/profile/:userID',
       name: 'profile',
       component: ProfileView,
+      props: true,
+      meta: {
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/instruments/:instrument',
+      name: 'instrument',
+      component: InstrumentView,
       props: true,
       meta: {
         requiresAuth: false

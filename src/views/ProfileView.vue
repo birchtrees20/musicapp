@@ -29,7 +29,7 @@
   import { ref, watchEffect, onUnmounted } from "vue";
   import { defineProps, defineEmits } from 'vue';
   import { auth } from "@/firebase/index.js";
-  import { emailToName } from '@/helpers/emailFormat.js';
+  import { emailToName } from '@/helpers/scripts.js';
 
   
   const props = defineProps(['userID']);
@@ -117,7 +117,7 @@
   // Check if there is a user in the array
   if (currentUser.value.length > 0) {
     userProfileEmail.value = currentUser.value[0].email;
-    userName.value = currentUser.value[0].firstName + currentUser.value[0].lastName;
+    userName.value = currentUser.value[0].firstName + " " + currentUser.value[0].lastName;
   }
 });
   
