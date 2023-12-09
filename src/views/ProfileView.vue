@@ -6,10 +6,10 @@
           <h2>Instruments:</h2>
           <ul>
             <li v-for="item in instrument.instruments" :key="item">
-              {{ item }}
-              <button v-if="isCurrentUserProfile(instrument.userID)" @click="removeInstrument(instrument.id, item)">-</button>
+                {{ item }}
+                <button v-if="isCurrentUserProfile(instrument.userID)" @click="removeInstrument(instrument.id, item)" class="remove-button">-</button>
             </li>
-          </ul>
+            </ul>
         </li>
       </ul>
   
@@ -112,5 +112,57 @@
   </script>
   
   <style>
+main {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 16px;
+  position: relative; /* Added for positioning */
+}
+
+.remove-button, .add-button {
+  background-color: #ff6347; /* Tomato color */
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.remove-button:hover, .add-button:hover {
+  background-color: #d2361e; /* Slightly darker shade on hover */
+}
+
+.remove-button {
+  position: absolute; /* Positioned relative to the parent li */
+  right: 0; /* Fixed position at the right edge of the parent li */
+}
+
+input {
+  padding: 8px;
+  margin-right: 8px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+/* Add some spacing between elements */
+main > * {
+  margin-bottom: 16px;
+}
+
   </style>
   
