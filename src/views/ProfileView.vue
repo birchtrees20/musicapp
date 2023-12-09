@@ -6,10 +6,10 @@
           <h2>Instruments:</h2>
           <ul>
             <li v-for="item in instrument.instruments" :key="item">
-                {{ item }}
-                <button v-if="isCurrentUserProfile(instrument.userID)" @click="removeInstrument(instrument.id, item)" class="remove-button">-</button>
+              {{ item }}
+              <button v-if="isCurrentUserProfile(instrument.userID)" @click="removeInstrument(instrument.userID, item)" class="remove-button">-</button>
             </li>
-            </ul>
+          </ul>
         </li>
       </ul>
   
@@ -36,6 +36,7 @@
   const filteredInstruments = ref([]);
   const currentUserID = ref('');
   const newInstrument = ref('');
+  const allUsers = ref([]);
   
   // Get the current user's ID
   auth.onAuthStateChanged((user) => {
@@ -46,15 +47,15 @@
     }
   });
   
-  onSnapshot(collection(db, 'instruments'), (querySnapshot) => {
-    instruments.value = [];
+  onSnapshot(collection(db, 'users'), (querySnapshot) => {  
+    allUsers.value = []; 
     querySnapshot.forEach((doc) => {
-      let instrument = {
-        "id": doc.id, // Document ID
+      const userInstruments = doc.data().instruments || [];
+      let user = {  
         "userID": doc.data().userID,
-        "instruments": doc.data().instruments
-      }
-      instruments.value.push(instrument);
+        "instruments": userInstruments
+      };
+      allUsers.value.push(user);  
     });
   });
   
@@ -62,16 +63,16 @@
     return currentUserID.value === profileUserID;
   };
   
-  const removeInstrument = async (docID, instrument) => {
+  const removeInstrument = async (profileUserID, instrument) => {
     // Check if the profile matches the logged-in user's profile
-    const instrumentDoc = instruments.value.find(item => item.id === docID);
+    const userDoc = allUsers.value.find(user => user.userID === profileUserID);
   
-    if (instrumentDoc && isCurrentUserProfile(instrumentDoc.userID)) {
+    if (userDoc && isCurrentUserProfile(userDoc.userID)) {
       // Remove the instrument from the array
-      instrumentDoc.instruments = instrumentDoc.instruments.filter(item => item !== instrument);
+      userDoc.instruments = userDoc.instruments.filter(item => item !== instrument);
   
       // Update the Firestore document
-      const docRef = doc(db, 'instruments', docID);
+      const docRef = doc(db, 'users', profileUserID);
       await updateDoc(docRef, {
         instruments: arrayRemove(instrument)
       });
@@ -83,12 +84,12 @@
   
   const addInstrument = async () => {
     if (newInstrument.value.trim() !== '') {
-      // Find the document ID for the current user's instruments
-      const userInstrumentDoc = instruments.value.find(item => item.userID === currentUserID.value);
+      // Find the current user's document in allUsers
+      const currentUserDoc = allUsers.value.find(user => user.userID === currentUserID.value);
   
-      if (userInstrumentDoc) {
+      if (currentUserDoc) {
         // Update the Firestore document
-        const docRef = doc(db, 'instruments', userInstrumentDoc.id);
+        const docRef = doc(db, 'users', currentUserID.value);
         await updateDoc(docRef, {
           instruments: arrayUnion(newInstrument.value)
         });
@@ -101,69 +102,66 @@
   
   watchEffect(() => {
     // Update filteredInstruments based on userID
-    filteredInstruments.value = instruments.value.filter(item => item.userID === props.userID);
+    filteredInstruments.value = allUsers.value.filter(user => user.userID === props.userID);
   });
   
   // Unsubscribe from the snapshot listener when the component is unmounted
   onUnmounted(() => {
     // Your cleanup code, if any
-  }); 
+  });
   </script>
   
-
-  
   <style>
-main {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-h1 {
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 16px;
-  position: relative; /* Added for positioning */
-}
-
-.remove-button, .add-button {
-  background-color: #ff6347; /* Tomato color */
-  color: #fff;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-}
-
-.remove-button:hover, .add-button:hover {
-  background-color: #d2361e; /* Slightly darker shade on hover */
-}
-
-.remove-button {
-  position: absolute; /* Positioned relative to the parent li */
-  right: 0; /* Fixed position at the right edge of the parent li */
-}
-
-input {
-  padding: 8px;
-  margin-right: 8px;
-}
-
-h2 {
-  font-size: 20px;
-  margin-bottom: 8px;
-}
-
-/* Add some spacing between elements */
-main > * {
-  margin-bottom: 16px;
-}
-
+  main {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 16px;
+    position: relative; /* Added for positioning */
+  }
+  
+  .remove-button, .add-button {
+    background-color: #ff6347; /* Tomato color */
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .remove-button:hover, .add-button:hover {
+    background-color: #d2361e; /* Slightly darker shade on hover */
+  }
+  
+  .remove-button {
+    position: absolute; /* Positioned relative to the parent li */
+    right: 0; /* Fixed position at the right edge of the parent li */
+  }
+  
+  input {
+    padding: 8px;
+    margin-right: 8px;
+  }
+  
+  h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  /* Add some spacing between elements */
+  main > * {
+    margin-bottom: 16px;
+  }
   </style>
   
