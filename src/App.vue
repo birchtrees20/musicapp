@@ -1,41 +1,65 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
+import SearchBar from "./components/SearchBar.vue";
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
-      <nav>
+    <nav>
+      <div class="logo">
+        Project name
+      </div>
+      <SearchBar class="search" />
+      <div class="nav-routes">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/bands">Bands</RouterLink>
-      </nav>
-    </div>
+      </div>
+    </nav>
   </header>
-
   <RouterView />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
 nav {
-  width: 100%;
   font-size: 12px;
-  text-align: center;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  align-items: center;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+  border-style: solid;
+  border-color:gray;
+}
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  width: 33%;
+  display: flex;
+  justify-content: start;
 }
 
-nav a {
+.search {
+  display: flex;
+  width: 33%;
+}
+
+.nav-routes {
+  display: flex;
+  width: 33%;
+  justify-content: end;
+}
+
+.nav-routes a {
   text-decoration: none;
   font-size: 20px;
-  margin: 15px;
   font-weight: bold;
+  margin-left: 15px;
 }
 </style>

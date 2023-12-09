@@ -1,7 +1,10 @@
 <template>
   <div class="dimensions">
-    <section class="layout">
+    <div class="layout">
       <div class="sidebar">
+        <div class="side-title">
+          Bands
+        </div>
         <div v-for="band in bands" :key="band.id" class="band-card">
           <h2 class="band-name">{{ band.name }}</h2>
         </div>
@@ -9,7 +12,7 @@
       <div class="body">
         <button @click="addBand">Press to add test band</button>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -38,9 +41,9 @@ async function addBand() {
   let randomName = (Math.random() + 1).toString(36).substring(7);
   await setDoc(doc(bandsRef, randomName), {
     name: randomName,
-    members: ["Member A", "Member B"]
+    members: ["Member A", "Member B"],
   });
-  console.log("Added new band")
+  console.log("Added new band");
 }
 
 onMounted(async () => {
@@ -53,28 +56,37 @@ onMounted(async () => {
 .dimensions {
   margin-left: 200px;
   margin-right: 200px;
+  overflow: hidden;
 }
 
 .layout {
-  width: 1366px;
-  height: 768px;
+  display: flex;
+  flex-direction: row;
+}
 
-  display: grid;
-  grid:
-    "sidebar body" 1fr
-    / auto 1fr;
-  gap: 8px;
+.side-title {
+  background-color:white;
+  font-size: 20px;
+  font-family:Arial, Helvetica, sans-serif;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .sidebar {
   grid-area: sidebar;
+  height: 100vh;
   width: 150px;
   display: flex;
   flex-direction: column;
-  background-color: antiquewhite;
-  border-right-width: 4px;
-  border-color: blue;
+  background-color: white;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-style: solid;
+  border-color:gray;
 }
+
 .body {
   grid-area: body;
 }
@@ -83,14 +95,9 @@ onMounted(async () => {
   margin-top: 50px;
 }
 
-.bands {
-  display: flex;
-  flex-direction: row;
-}
-
 .band-name {
   display: flex;
-  justify-content: left;
+  padding-left: 20px;
   font-size: 15px;
 }
 
@@ -107,7 +114,6 @@ onMounted(async () => {
 }
 
 .band-card {
-  padding-left: 30px;
   border-radius: 0.5rem;
   border-width: 1px;
   border-color: gray;
