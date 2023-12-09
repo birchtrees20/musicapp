@@ -17,11 +17,11 @@ const user = store.state.user;
   <header>
     <div class="wrapper">
 
-      <nav v-if="$store.state.user">
+      <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
-        <button @click="$store.dispatch('logout')">Logout</button>
+        <button v-if="$store.state.user" @click="$store.dispatch('logout')">Logout</button>
       </nav>
     </div>
   </header>
