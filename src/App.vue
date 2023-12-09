@@ -1,36 +1,32 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import { onBeforeMount } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
-
-onBeforeMount(() => {
-  store.dispatch('fetchUser');
-});
-
-
-const user = store.state.user;
-
-
-
+import { RouterLink, RouterView } from "vue-router";
+import NavBar from "./components/NavBar.vue";
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
-        <button v-if="$store.state.user" @click="$store.dispatch('logout')">Logout</button>
-      </nav>
-    </div>
+    <nav>
+      <NavBar />
+    </nav>
   </header>
-
   <RouterView />
 </template>
 
 <style scoped>
+nav {
+  font-size: 12px;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+  border-style: solid;
+  border-color:gray;
+}
+
 </style>
