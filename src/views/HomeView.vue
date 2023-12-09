@@ -3,6 +3,6 @@
 
 <template>
   <main>
-    <p>asdfasdf</p>
+    <h1>Home</h1>
   </main>
 </template>
