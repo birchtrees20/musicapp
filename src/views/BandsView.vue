@@ -41,9 +41,10 @@ onMounted(async () => {
       <SideBar />
       <div class="body">
         <div>
-          Create a band
+          All the bands. . 
+          <br>
+          Dunno what to put here ?
         </div>
-        <button @click="addBand">Press to add test band</button>
       </div>
     </div>
   </div>
@@ -62,6 +63,7 @@ onMounted(async () => {
 }
 
 .body {
+  padding-left: 20px;
 }
 
 .join-button {

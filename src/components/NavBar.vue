@@ -11,8 +11,8 @@ import SearchBar from "./SearchBar.vue";
   <div class="nav-routes">
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
-    <RouterLink to="/login">Login</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
+    <RouterLink to="/login">Login</RouterLink>
   </div>
 </template>
 

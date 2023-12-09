@@ -26,6 +26,9 @@ onMounted(async () => {
 <template>
   <div class="sidebar">
     <div class="side-title">Bands</div>
+    <div @click="" class="band-card">
+      <h2 class="band-name">+ Create a band</h2>
+    </div>
     <div v-for="band in bands" :key="band.id" class="band-card">
       <h2 class="band-name">{{ band.name }}</h2>
     </div>
@@ -33,15 +36,6 @@ onMounted(async () => {
 </template>
 
 <style>
-.side-title {
-  background-color:white;
-  font-size: 20px;
-  font-family:Arial, Helvetica, sans-serif;
-  padding-left: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
 .sidebar {
   grid-area: sidebar;
   height: 100vh;
@@ -53,7 +47,25 @@ onMounted(async () => {
   border-bottom-width: 0;
   border-left-width: 0;
   border-style: solid;
-  border-color:gray;
+  border-color: gray;
+}
+
+.side-title {
+  background-color: white;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.create-band {
+  cursor: pointer;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: gray;
+  background-color: wheat;
+  margin-bottom: 1px;
 }
 
 .band-name {
@@ -63,10 +75,15 @@ onMounted(async () => {
 }
 
 .band-card {
-  border-radius: 0.5rem;
-  border-width: 1px;
-  border-color: gray;
-  background-color: wheat;
+  cursor: pointer;
   margin-bottom: 1px;
+}
+
+.sidebar .band-card:hover {
+  border-width: 1px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: gray;
+  background-color: lightgrey;
 }
 </style>
