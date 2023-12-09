@@ -9,7 +9,10 @@ onBeforeMount(() => {
   store.dispatch('fetchUser');
 });
 
+
 const user = store.state.user;
+
+
 
 </script>
 
