@@ -21,7 +21,7 @@ const user = store.state.user;
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
-    <button v-if="$store.state.user" @click="$store.dispatch('logout')">Logout</button>
+    <RouterLink v-if="$store.state.user" to="/" @click="$store.dispatch('logout')">Logout</RouterLink>
     <RouterLink v-else to="/login">Login</RouterLink>
   </div>
 </template>
