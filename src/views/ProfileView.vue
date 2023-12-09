@@ -1,8 +1,8 @@
 <template>
     <main>
-      <h1>Profile {{ userID }}</h1>
+      <h1>Profile {{ userProfileEmail }}</h1>
       <ul>
-        <li v-for="instrument in filteredInstruments" :key="instrument.id">
+        <li v-for="instrument in currentUser" :key="instrument.id">
           <h2>Instruments:</h2>
           <ul>
             <li v-for="item in instrument.instruments" :key="item">
@@ -32,35 +32,39 @@
   const props = defineProps(['userID']);
   const emit = defineEmits();
   
-  const instruments = ref([]);
-  const filteredInstruments = ref([]);
-  const currentUserID = ref('');
-  const newInstrument = ref('');
+ 
   const allUsers = ref([]);
+  const currentUser = ref();
+
+  const userProfileEmail = ref('')
+
+  const currentUserAuthID = ref(''); //retrieved by auth
+  const newInstrument = ref('');
   
   // Get the current user's ID
   auth.onAuthStateChanged((user) => {
     if (user) {
-      currentUserID.value = user.uid;
+      currentUserAuthID.value = user.uid;
     } else {
-      currentUserID.value = '';
+      currentUserAuthID.value = '';
     }
   });
   
-  onSnapshot(collection(db, 'users'), (querySnapshot) => {  
-    allUsers.value = []; 
+  onSnapshot(collection(db, 'users'), (querySnapshot) => {
+    allUsers.value = [];
     querySnapshot.forEach((doc) => {
       const userInstruments = doc.data().instruments || [];
-      let user = {  
+      let user = {
         "userID": doc.data().userID,
+        "email": doc.data().email,
         "instruments": userInstruments
       };
-      allUsers.value.push(user);  
+      allUsers.value.push(user);
     });
   });
   
   const isCurrentUserProfile = (profileUserID) => {
-    return currentUserID.value === profileUserID;
+    return currentUserAuthID.value === profileUserID;
   };
   
   const removeInstrument = async (profileUserID, instrument) => {
@@ -85,11 +89,11 @@
   const addInstrument = async () => {
     if (newInstrument.value.trim() !== '') {
       // Find the current user's document in allUsers
-      const currentUserDoc = allUsers.value.find(user => user.userID === currentUserID.value);
+      const currentUserDoc = allUsers.value.find(user => user.userID === currentUserAuthID.value);
   
       if (currentUserDoc) {
         // Update the Firestore document
-        const docRef = doc(db, 'users', currentUserID.value);
+        const docRef = doc(db, 'users', currentUserAuthID.value);
         await updateDoc(docRef, {
           instruments: arrayUnion(newInstrument.value)
         });
@@ -101,14 +105,40 @@
   };
   
   watchEffect(() => {
-    // Update filteredInstruments based on userID
-    filteredInstruments.value = allUsers.value.filter(user => user.userID === props.userID);
-  });
+  // Update currentUser based on userID
+  currentUser.value = allUsers.value.filter(user => user.userID === props.userID);
+
+  // Check if there is a user in the array
+  if (currentUser.value.length > 0) {
+    userProfileEmail.value = currentUser.value[0].email;
+  }
+});
+
+function processEmail(email) {
+  // Remove everything after and including '@'
+  const username = email.split('@')[0];
+
+  // Check if there is a dot
+  if (username.includes('.')) {
+    // Replace dot with space and capitalize each word
+    const formattedUsername = username
+      .split('.')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    // Add a dot at the end
+    return formattedUsername + '.';
+  } else {
+    // If there is no dot, just return the original username
+    return username;
+  }
+}
+
+// Example usage:
+const inputEmail = "paddy.den@example.com";
+const result = processEmail(inputEmail);
+console.log(result);  // Output: "Example Email."
   
-  // Unsubscribe from the snapshot listener when the component is unmounted
-  onUnmounted(() => {
-    // Your cleanup code, if any
-  });
   </script>
   
   <style>

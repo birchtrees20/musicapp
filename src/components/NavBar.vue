@@ -39,6 +39,7 @@ onMounted(() => {
   <div class="nav-routes">
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
+    <RouterLink to="/members">Members</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
     <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`">Profile</RouterLink>
     <RouterLink v-if="$store.state.user" to="/" @click="$store.dispatch('logout')">Logout</RouterLink>
