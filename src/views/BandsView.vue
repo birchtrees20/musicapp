@@ -1,30 +1,39 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { db } from "@/firebase/index.js";
-import { collection, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import SideBar from "@/components/SideBar.vue";
+import BandInfo from "@/components/BandInfo.vue";
 
-const bands = ref([]);
 const bandName = ref();
 const bandInfo = ref();
+const band = reactive({
+  name: String,
+  members: [],
+});
 
-const selected = ref(false);
+const selected = ref("created");
 
-async function getBands() {
-  const querySnapshot = await getDocs(collection(db, "bands"));
-  querySnapshot.forEach((doc) => {
-    const band = {
-      id: doc.id,
-      name: doc.data().name,
-      members: doc.data().members,
-    };
-    bands.value.push(band);
-  });
+async function buttonClicked(newValue) {
+  if (newValue !== "created") {
+    await getBand(newValue);
+  } else {
+    selected.value = newValue;
+  }
 }
 
-function showCreate(newValue) {
-  selected.value = newValue;
-  console.log(selected.value)
+async function getBand(id) {
+  const docRef = doc(db, "bands", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    band.name = docSnap.data().name;
+    band.members = docSnap.data().members;
+    console.log(band);
+    selected.value = id;
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
 }
 
 async function createBand() {
@@ -36,18 +45,13 @@ async function createBand() {
   });
   console.log("Added new band");
 }
-
-onMounted(async () => {
-  console.log("Connecting to Firebase");
-  await getBands();
-});
 </script>
 
 <template>
   <div class="layout">
-    <SideBar @show="showCreate" />
+    <SideBar @show="buttonClicked" />
     <div class="body">
-      <div v-if="selected==='created'" class="create">
+      <div v-if="selected === 'created'" class="create">
         <div class="create-card">
           <h2 class="card-title">
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
@@ -72,8 +76,8 @@ onMounted(async () => {
           </form>
         </div>
       </div>
-      <div v-else>
-        <!-- event with band id will be emitted. Implement a component that can use and display band info. -->
+      <div v-else class="create">
+        <BandInfo :key="band.id" :band="band"/>
       </div>
     </div>
     <div class="emptybar"></div>
