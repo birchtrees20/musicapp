@@ -1,8 +1,17 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import SearchBar from "./SearchBar.vue";
+import { onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+onBeforeMount(() => {
+  store.dispatch('fetchUser');
+});
 
 
+const user = store.state.user;
 </script>
 
 <template>
@@ -12,7 +21,8 @@ import SearchBar from "./SearchBar.vue";
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
-    <RouterLink to="/login">Login</RouterLink>
+    <button v-if="$store.state.user" @click="$store.dispatch('logout')">Logout</button>
+    <RouterLink v-else to="/login">Login</RouterLink>
   </div>
 </template>
 
