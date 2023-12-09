@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { auth } from '../firebase'
+
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
+import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +11,10 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {
+        requiresAuth: false
+      }
     },
     {
       path: '/login',
@@ -18,10 +24,7 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: AboutView
     },
     {
       path: '/bands',
@@ -29,6 +32,21 @@ const router = createRouter({
       component: () => import("@/views/BandsView.vue")
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  //if on /login and authenticated redirect to home
+  if (to.path === '/login' && auth.currentUser) {
+    next('/')
+    return
+  }
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !auth.currentUser) {
+    next('/login')
+    return
+  }
+
+  next();
 })
 
 export default router
