@@ -107,9 +107,10 @@
   // Unsubscribe from the snapshot listener when the component is unmounted
   onUnmounted(() => {
     // Your cleanup code, if any
-  });
-  
+  }); 
   </script>
+  
+
   
   <style>
 main {
