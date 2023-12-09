@@ -44,7 +44,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/instruments/:instrument',
+      path: '/instruments/',
       name: 'instrument',
       component: InstrumentView,
       props: true,
