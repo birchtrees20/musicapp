@@ -2,16 +2,35 @@
 import { RouterLink } from "vue-router";
 import SearchBar from "./SearchBar.vue";
 import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
+import { auth } from '../firebase';
 
 const store = useStore();
+const userID= ref('');
 
 onBeforeMount(() => {
   store.dispatch('fetchUser');
 });
 
 
-const user = store.state.user;
+
+onMounted(() => {
+  // Add an authentication state observer
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in
+      userID.value = user.uid;
+    } else {
+      // User is signed out
+      userID.value = '';
+    }
+  });
+});
+
+//console.log(userID)
+
 </script>
 
 <template>
@@ -21,6 +40,7 @@ const user = store.state.user;
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/about">About</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
+    <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`">Profile</RouterLink>
     <RouterLink v-if="$store.state.user" to="/" @click="$store.dispatch('logout')">Logout</RouterLink>
     <RouterLink v-else to="/login">Login</RouterLink>
   </div>

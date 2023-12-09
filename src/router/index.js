@@ -4,6 +4,7 @@ import { auth } from '../firebase'
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
 import AboutView from '../views/AboutView.vue'
+import ProfileView from '../views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,15 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: AboutView
+    },
+    {
+      path: '/profile/:userID',
+      name: 'profile',
+      component: ProfileView,
+      props: true,
+      meta: {
+        requiresAuth: false
+      }
     },
     {
       path: '/bands',
