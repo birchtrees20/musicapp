@@ -26,10 +26,10 @@ onMounted(async () => {
 <template>
   <div class="sidebar">
     <div class="side-title">BANDS</div>
-    <div @click="" class="band-card">
+    <div @click="$emit('show', 'created')" class="band-card">
       <h2 class="band-name"><font-awesome-icon class="band-icon" :icon="['fas', 'plus']" />Create</h2>
     </div>
-    <div v-for="band in bands" :key="band.id" class="band-card">
+    <div @click="$emit('show', band.id)" v-for="band in bands" :key="band.id" class="band-card">
       <h2 class="band-name">
         <font-awesome-icon class="band-icon" :icon="['fas', 'drum']" />
         {{ band.name }}

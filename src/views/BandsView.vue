@@ -8,6 +8,8 @@ const bands = ref([]);
 const bandName = ref();
 const bandInfo = ref();
 
+const selected = ref(false);
+
 async function getBands() {
   const querySnapshot = await getDocs(collection(db, "bands"));
   querySnapshot.forEach((doc) => {
@@ -18,6 +20,11 @@ async function getBands() {
     };
     bands.value.push(band);
   });
+}
+
+function showCreate(newValue) {
+  selected.value = newValue;
+  console.log(selected.value)
 }
 
 async function createBand() {
@@ -38,9 +45,9 @@ onMounted(async () => {
 
 <template>
   <div class="layout">
-    <SideBar />
+    <SideBar @show="showCreate" />
     <div class="body">
-      <div class="create">
+      <div v-if="selected==='created'" class="create">
         <div class="create-card">
           <h2 class="card-title">
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
@@ -64,6 +71,9 @@ onMounted(async () => {
             </div>
           </form>
         </div>
+      </div>
+      <div v-else>
+        <!-- event with band id will be emitted. Implement a component that can use and display band info. -->
       </div>
     </div>
     <div class="emptybar"></div>
