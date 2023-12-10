@@ -1,24 +1,57 @@
 <script setup>
 import { RouterLink } from "vue-router";
 import SearchBar from "./SearchBar.vue";
-import { onBeforeMount } from "vue";
-import { useStore } from "vuex";
+import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { auth } from '../firebase';
 
 const store = useStore();
+const userID= ref('');
 
 onBeforeMount(() => {
   store.dispatch("fetchUser");
 });
 
-const user = store.state.user;
+onMounted(() => {
+  // Add an authentication state observer
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in
+      userID.value = user.uid;
+    } else {
+      // User is signed out
+      userID.value = '';
+    }
+  });
+});
+
+//console.log(userID)
+
 </script>
 
 <template>
-  <RouterLink class="logo" to="/"><font-awesome-icon class="logo-icon" :icon="['fas', 'guitar']" />BandCollab</RouterLink>
+  <RouterLink class="logo" to="/"
+    ><font-awesome-icon
+      class="logo-icon"
+      :icon="['fas', 'guitar']"
+    />BandCollab</RouterLink
+  >
   <SearchBar class="search" />
   <div class="nav-routes">
     <RouterLink to="/bands">Bands</RouterLink>
-    <div class="logout-button" v-if="$store.state.user" @click="$store.dispatch('logout')">
+    <RouterLink to="/members">Members</RouterLink>
+    <RouterLink to="/bands">Bands</RouterLink>
+    <RouterLink to="/instruments">Instruments</RouterLink>
+    <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`"
+      >Profile</RouterLink
+    >
+    <div
+      class="logout-button"
+      v-if="$store.state.user"
+      @click="$store.dispatch('logout')"
+    >
       Logout
     </div>
     <RouterLink v-else to="/login">Login</RouterLink>
