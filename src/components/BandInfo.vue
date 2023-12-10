@@ -27,7 +27,7 @@ const props = defineProps(["band"]);
 
 <style>
 .band-info-card {
-  background-color: #fff;
+  background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -35,8 +35,8 @@ const props = defineProps(["band"]);
 }
 
 .band-header {
-  background-color: #3498db;
-  color: #fff;
+  background-color: grey;
+  color: white;
   padding: 20px;
   text-align: center;
   display: flex;

@@ -42,7 +42,6 @@ onMounted(() => {
   <div class="nav-routes">
     <RouterLink to="/bands">Bands</RouterLink>
     <RouterLink to="/members">Members</RouterLink>
-    <RouterLink to="/bands">Bands</RouterLink>
     <RouterLink to="/instruments">Instruments</RouterLink>
     <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`"
       >Profile</RouterLink
