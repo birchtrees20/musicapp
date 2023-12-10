@@ -3,6 +3,16 @@
       <h1>{{ userName }} - Profile</h1>
       <h1>{{ userProfileEmail }}</h1>
       <ul>
+        <h2>Bands:</h2>
+        <ul>
+          <li v-for="band in currentUser.bands" :key="item">
+            {{ band }}
+            <button v-if="isCurrentUserProfile(instrument.userID)" @click="removeInstrument(instrument.userID, item)" class="remove-button">-</button>
+          </li>
+        </ul>
+      </ul>
+
+      <ul>
         <li v-for="instrument in currentUser" :key="instrument.id">
           <h2>Instruments:</h2>
           <ul>
@@ -31,11 +41,9 @@
   import { auth } from "@/firebase/index.js";
   import { emailToName } from '@/helpers/scripts.js';
 
-  
   const props = defineProps(['userID']);
   const emit = defineEmits();
   
- 
   const allUsers = ref([]);
   const currentUser = ref();
 
@@ -54,6 +62,7 @@
     }
   });
   
+  //retrieving all the users registered
   onSnapshot(collection(db, 'users'), (querySnapshot) => {
     allUsers.value = [];
     querySnapshot.forEach((doc) => {
@@ -69,6 +78,8 @@
     });
   });
   
+  //a check to see if your id matches the id of the profile
+  //you are going to edit
   const isCurrentUserProfile = (profileUserID) => {
     return currentUserAuthID.value === profileUserID;
   };

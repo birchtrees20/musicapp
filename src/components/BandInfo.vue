@@ -18,7 +18,7 @@ const props = defineProps(["band"]);
       <h3>Band Members</h3>
       <ul>
         <li v-for="member in props.band.members" :key="member.id">
-          {{ member }}
+          {{ member.firstName }}
         </li>
       </ul>
     </div>

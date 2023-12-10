@@ -5,20 +5,47 @@ import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import SideBar from "@/components/SideBar.vue";
 import BandInfo from "@/components/BandInfo.vue";
 import { useRoute } from "vue-router";
-import { auth } from "../firebase";
+import { auth } from "@/firebase/index.js";
 
-const userEmail = ref("");
+const currentUserAuthID = ref("");
+const user = reactive({});
 
 const bandName = ref();
 const bandInfo = ref();
+const bandMembers = ref([]);
+
 const band = reactive({
   name: String,
+  info: String,
   members: [],
 });
 
 const route = useRoute();
 const searchQuery = ref(route.query.search);
 const selected = ref("created");
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    currentUserAuthID.value = user.uid;
+    getUser();
+  } else {
+    currentUserAuthID.value = "";
+  }
+});
+
+async function getUser() {
+  console.log(currentUserAuthID.value);
+  const docRef = doc(db, "users", currentUserAuthID.value);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    user.value = docSnap.data();
+    console.log("Document data:", docSnap.data());
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
+  }
+}
 
 async function buttonClicked(newValue) {
   if (newValue !== "created") {
@@ -44,9 +71,10 @@ async function getBand(id) {
 
 async function createBand() {
   const bandsRef = collection(db, "bands");
+  bandMembers.value.push(user.value)
   await setDoc(doc(bandsRef, bandName.value), {
     name: bandName.value,
-    members: ["Member A", "Member B"],
+    members: bandMembers.value,
     info: bandInfo.value,
   });
   console.log("Added new band");
@@ -58,19 +86,6 @@ watchEffect(() => {
     searchQuery.value = newSearchQuery;
     getBand(newSearchQuery);
   }
-});
-
-onMounted(() => {
-  // Add an authentication state observer
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in
-      userEmail.value = user.email;
-    } else {
-      // User is signed out
-      userEmail.value = "";
-    }
-  });
 });
 
 onBeforeMount(() => {
@@ -88,7 +103,7 @@ onBeforeMount(() => {
       <div v-if="selected === 'created'" class="dis">
         <div class="create-band">
           <h2 class="create-title">
-            <h1>Hello {{ userEmail }}</h1>
+            <h1>Hello {{ user.value.firstName }}</h1>
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a New Band
           </h2>
