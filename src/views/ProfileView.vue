@@ -56,6 +56,7 @@ import {
   collection,
   onSnapshot,
   doc,
+  getDoc,
   updateDoc,
   arrayRemove,
   arrayUnion,
@@ -132,7 +133,7 @@ const removeInstrument = async (profileUserID, instrument) => {
 };
 
 const removeBand = async (profileUserID, band) => {
-  const userRef = doc(db, "users", currentUserAuthID.value);
+  const userRef = doc(db, "users", profileUserID);
 
   await updateDoc(userRef, {
     bands: arrayRemove(band),
@@ -142,9 +143,8 @@ const removeBand = async (profileUserID, band) => {
 
   const docSnapshot = await getDoc(bandsRef);
   const currentMembers = docSnapshot.data().members;
-
   const updatedMembers = currentMembers.filter(
-    (member) => member.id !== currentUserAuthID.value
+    (member) => member.userID !== profileUserID
   );
 
   await updateDoc(bandsRef, {
