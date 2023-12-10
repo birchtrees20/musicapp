@@ -7,7 +7,7 @@ const props = defineProps(["band"]);
   <div class="band-info-card">
     <div class="band-header">
       <h2 class="band-info-name">{{ props.band.name }}</h2>
-      <div class="join-button">Join</div>
+      <div @click="clickedJoin" class="join-button">Join</div>
     </div>
     <div class="band-info">
       <p>

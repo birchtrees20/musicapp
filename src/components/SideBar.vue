@@ -41,7 +41,7 @@ onMounted(async () => {
 <style>
 .sidebar {
   height: 100vh;
-  width: 150px;
+  width: 15%;
   display: flex;
   flex-direction: column;
   background-color: white;

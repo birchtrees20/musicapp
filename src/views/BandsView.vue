@@ -107,17 +107,13 @@ onBeforeMount(() => {
 .layout {
   display: flex;
   flex-direction: row;
-}
-
-.emptybar {
-  height: 100vh;
-  width: 150px;
+  width: 100%;
 }
 
 .body {
   padding-left: 20px;
-  width: 100%;
   display: flex;
+  width: 70%;
 }
 
 .create {
@@ -143,7 +139,7 @@ form {
 
 .create-card {
   height: 40%;
-  width: 40%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   padding: 50px 40px 20px 40px;
@@ -207,5 +203,11 @@ textarea {
   background-color: blue;
   border-radius: 6px;
   color: #ffffff;
+}
+
+.emptybar {
+  height: 100vh;
+  width: 15%;
+  display: flex;
 }
 </style>
