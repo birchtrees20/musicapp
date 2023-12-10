@@ -33,7 +33,7 @@ const router = createRouter({
       component: ProfileView,
       props: true,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     },
     {
