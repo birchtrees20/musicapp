@@ -28,13 +28,15 @@
         class="member-tile"
       >
         <h2>{{ user.firstName + " " + user.lastName }}</h2>
-        <ul>
-          <li v-for="instrument in user.instruments" :key="instrument">{{ instrument }}</li>
+        <ul v-if="user.instruments.length > 0">
+          <li v-for="instrument in user.instruments.sort()" :key="instrument">{{ instrument }}</li>
         </ul>
+        <p v-else>No instruments</p>
       </router-link>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onUnmounted } from 'vue';
@@ -110,6 +112,7 @@ const filterUsers = () => {
 .member-tiles {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* Center the tiles horizontally */
 }
 
 .member-tile {
@@ -118,5 +121,14 @@ const filterUsers = () => {
   margin: 8px;
   width: 200px;
   cursor: pointer;
+  text-decoration: none; /* Remove underlines */
+  color: black; /* Set text color to black */
+  text-align: center; /* Center text horizontally */
 }
+
+.member-name {
+  font-size: 18px; /* Adjust font size if needed */
+  margin-bottom: 8px; /* Add space between name and instruments */
+}
+
 </style>
