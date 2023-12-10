@@ -59,7 +59,7 @@ async function getUser() {
 }
 
 async function loginRedirect() {
-  router.push("/login")
+  router.push("/login");
 }
 
 async function buttonClicked(newValue) {
@@ -72,11 +72,18 @@ async function buttonClicked(newValue) {
 
 async function joinBand(id) {
   console.log("joining new band");
-  const bandRef = doc(db, "bands", id);
 
-  await updateDoc(bandRef, {
-    members: arrayUnion(user.value),
-  });
+  const bandRef = doc(db, "bands", id);
+  const bandSnapshot = await getDoc(bandRef);
+  const currentMembers = bandSnapshot.data().members;
+
+  if (!currentMembers.some((member) => member.userID === user.value.userID)) {
+    await updateDoc(bandRef, {
+      members: arrayUnion(user.value),
+    });
+  } else {
+    console.log("User already in band")
+  }
 
   const userRef = doc(db, "users", currentUserAuthID.value);
 
@@ -137,7 +144,9 @@ onBeforeMount(() => {
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a new band or join one!
           </div>
-          <button @click="loginRedirect" class="cta-button">Login to start</button>
+          <button @click="loginRedirect" class="cta-button">
+            Login to start
+          </button>
         </div>
       </div>
       <div v-else-if="authenticated && selected === 'created'" class="dis">
