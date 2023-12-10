@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, onBeforeMount, onMounted, watchEffect } from "vue";
 import { db } from "@/firebase/index.js";
+import router from "@/router/index.js";
 import {
   collection,
   getDoc,
@@ -57,6 +58,10 @@ async function getUser() {
   }
 }
 
+async function loginRedirect() {
+  router.push("/login")
+}
+
 async function buttonClicked(newValue) {
   if (newValue !== "created") {
     await getBand(newValue);
@@ -66,11 +71,17 @@ async function buttonClicked(newValue) {
 }
 
 async function joinBand(id) {
-  console.log("joining new band")
+  console.log("joining new band");
   const bandRef = doc(db, "bands", id);
 
   await updateDoc(bandRef, {
     members: arrayUnion(user.value),
+  });
+
+  const userRef = doc(db, "users", currentUserAuthID.value);
+
+  await updateDoc(userRef, {
+    bands: arrayUnion(id),
   });
 }
 
@@ -119,7 +130,17 @@ onBeforeMount(() => {
   <div class="layout">
     <SideBar @show="buttonClicked" />
     <div class="body">
-      <div v-if="selected === 'created'" class="dis">
+      <div class="landing" v-if="!authenticated && selected === 'created'">
+        <div class="col">
+          <h1 class="hello">Hello {{ name }}</h1>
+          <div class="call-to-action">
+            <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
+            Create a new band or join one!
+          </div>
+          <button @click="loginRedirect" class="cta-button">Login to start</button>
+        </div>
+      </div>
+      <div v-else-if="authenticated && selected === 'created'" class="dis">
         <div class="create-band">
           <h2 class="create-title">
             <h1>Hello {{ name }}</h1>
@@ -170,12 +191,44 @@ onBeforeMount(() => {
   width: 70%;
 }
 
+.hello {
+  font-size: 40px;
+}
+
+.cta-button {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+  background-color: rgb(7, 7, 161);
+}
+
 .dis {
   display: flex;
   width: 100%;
   justify-content: center;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.landing {
+  width: 100%;
+  font-size: x-large;
+  display: flex;
+  justify-content: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
 }
 
 .create-band {
@@ -228,7 +281,7 @@ textarea {
   border: 0;
   background-color: red;
   border-radius: 6px;
-  color: #ffffff;
+  color: white;
 }
 
 .create-button {
@@ -241,7 +294,7 @@ textarea {
   border: 0;
   background-color: blue;
   border-radius: 6px;
-  color: #ffffff;
+  color: white;
 }
 
 .emptybar {

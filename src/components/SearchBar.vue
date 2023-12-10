@@ -51,7 +51,7 @@ async function getBand() {
     v-model="search"
     @keyup.enter="getBand"
     class="search-bar"
-    placeholder="Search for members or bands"
+    placeholder="Search for members(first name) or bands"
   />
 </template>
 

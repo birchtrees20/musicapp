@@ -40,7 +40,7 @@ onMounted(() => {
   >
   <SearchBar class="search" />
   <div class="nav-routes">
-    <RouterLink to="/bands">Bands</RouterLink>
+    <RouterLink to="/">Bands</RouterLink>
     <RouterLink to="/members">Members</RouterLink>
     <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`"
       >Profile</RouterLink

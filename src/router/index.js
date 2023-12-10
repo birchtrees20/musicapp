@@ -11,8 +11,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'band',
+      component: () => import("@/views/BandsView.vue"),
       meta: {
         requiresAuth: false
       }
@@ -36,11 +36,11 @@ const router = createRouter({
         requiresAuth: false
       }
     },
-    {
-      path: '/bands',
-      name: 'bands',
-      component: () => import("@/views/BandsView.vue")
-    }
+    // {
+    //   path: '/bands',
+    //   name: 'bands',
+    //   component: () => import("@/views/BandsView.vue")
+    // }
   ]
 })
 
