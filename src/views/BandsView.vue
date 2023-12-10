@@ -9,6 +9,7 @@ import { auth } from "@/firebase/index.js";
 
 const currentUserAuthID = ref("");
 const user = reactive({});
+const name = ref('');
 
 const bandName = ref();
 const bandInfo = ref();
@@ -40,6 +41,7 @@ async function getUser() {
 
   if (docSnap.exists()) {
     user.value = docSnap.data();
+    name.value = user.value.firstName;
     console.log("Document data:", docSnap.data());
   } else {
     // docSnap.data() will be undefined in this case
@@ -103,7 +105,7 @@ onBeforeMount(() => {
       <div v-if="selected === 'created'" class="dis">
         <div class="create-band">
           <h2 class="create-title">
-            <h1>Hello {{ user.value.firstName }}</h1>
+            <h1>Hello {{ name }}</h1>
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a New Band
           </h2>
