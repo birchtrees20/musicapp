@@ -1,8 +1,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { db } from "@/firebase/index.js";
-import { collection, getDoc, doc, setDoc } from "firebase/firestore";
-import router from "@/router/index.js"
+import {
+  collection,
+  getDoc,
+  doc,
+  query,
+  where,
+  or,
+  getDocs,
+} from "firebase/firestore";
+import router from "@/router/index.js";
 
 const search = ref();
 const band = ref();
@@ -14,25 +22,28 @@ async function getBand() {
   if (docSnap.exists()) {
     band.value = docSnap.data();
     console.log("Document data:", docSnap.data());
-    router.push({ name: 'bands', query: { search: search.value } });
+    router.push({ name: "bands", query: { search: search.value } });
   } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
+    console.log("No matching band!");
+    const usersRef = collection(db, "users");
+    const q = query(
+      usersRef,
+      or(
+        where("firstName", "==", search.value),
+        where("lastName", "==", search.value)
+      )
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const userData = doc.data();
+      router.push({
+        name: "profile",
+        params: { userID: userData.userID },
+      });
+    });
   }
-
-  // memberRef = doc(db, "members", search.value);
-  // docSnap = await getDoc(memberRef);
-  
-  // if (docSnap.exists()) {
-  //   console.log("Document data:", docSnap.data());
-  // } else {
-  //   // docSnap.data() will be undefined in this case
-  //   console.log("No such document!");
-  // }
-
   search.value = "";
 }
-
 </script>
 
 <template>
