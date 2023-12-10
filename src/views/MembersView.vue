@@ -63,22 +63,21 @@ onSnapshot(collection(db, 'users'), (querySnapshot) => {
     };
     allUsers.value.push(user);
 
-    //collect all unique instruments for filtering
+    //collect unique instruments
     allInstruments.value = [...new Set([...allInstruments.value, ...userInstruments])];
   });
 
-  //sort instruments lexicographically by ascending order
+  //ascneding lexicographically
   sortedInstruments.value = allInstruments.value.sort();
 
-  //initial sorting and filtering
   sortUsers();
   filterUsers();
 });
 
 const sortUsers = () => {
-  displayedUsers.value = [...allUsers.value];
+  displayedUsers.value = [...displayedUsers.value];
 
-  //sort members based on name
+  //sort members by name
   displayedUsers.value.sort((a, b) => {
     const nameA = a.firstName + ' ' + a.lastName;
     const nameB = b.firstName + ' ' + b.lastName;
@@ -92,6 +91,7 @@ const sortUsers = () => {
 };
 
 const filterUsers = () => {
+  //apply instrument filter first
   if (instrumentFilter.value) {
     displayedUsers.value = allUsers.value.filter((user) =>
       user.instruments.includes(instrumentFilter.value)
@@ -99,7 +99,11 @@ const filterUsers = () => {
   } else {
     displayedUsers.value = [...allUsers.value];
   }
+
+  //then apply name sorting
+  sortUsers();
 };
+
 </script>
 
 <style scoped>
