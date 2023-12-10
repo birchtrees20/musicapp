@@ -10,6 +10,7 @@ console.log(props.band.members)
       <div v-if="props.authenticated" @click="$emit('joinBand', props.band.name)" class="join-button">Join</div>
     </div>
     <div class="band-info">
+      <h3>Band Information</h3>
       <p>
         {{ props.band.info }}
       </p>
@@ -59,6 +60,10 @@ console.log(props.band.members)
   border-color: ghostwhite;
   border-radius: 6px;
   border-width: 2px;
+}
+
+.join-button:hover {
+  background-color: rgb(80, 79, 79);
 }
 
 .band-info {
