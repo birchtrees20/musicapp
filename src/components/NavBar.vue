@@ -26,9 +26,6 @@ onMounted(() => {
     }
   });
 });
-
-//console.log(userID)
-
 </script>
 
 <template>

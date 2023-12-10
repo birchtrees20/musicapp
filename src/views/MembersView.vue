@@ -117,7 +117,7 @@ const filterUsers = () => {
 </script>
 
 <style scoped>
-.members-header{
+.members-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
