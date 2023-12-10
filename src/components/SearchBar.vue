@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { db } from "@/firebase/index.js";
 import { collection, getDoc, doc, setDoc } from "firebase/firestore";
+import router from "@/router/index.js"
 
 const search = ref();
 const band = ref();
@@ -13,6 +14,7 @@ async function getBand() {
   if (docSnap.exists()) {
     band.value = docSnap.data();
     console.log("Document data:", docSnap.data());
+    router.push({ name: 'bands', query: { search: search.value } });
   } else {
     // docSnap.data() will be undefined in this case
     console.log("No such document!");

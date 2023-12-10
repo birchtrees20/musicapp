@@ -1,8 +1,4 @@
 <script setup>
-import { ref, watchEffect } from "vue";
-import { db } from "@/firebase/index.js";
-import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
-
 const props = defineProps(["band"]);
 
 </script>
@@ -10,7 +6,8 @@ const props = defineProps(["band"]);
 <template>
   <div class="band-info-card">
     <div class="band-header">
-      <h2 class=".band-info-name">{{ props.band.name }}</h2>
+      <h2 class="band-info-name">{{ props.band.name }}</h2>
+      <div class="join-button">Join</div>
     </div>
     <div class="band-info">
       <p>
@@ -44,10 +41,24 @@ const props = defineProps(["band"]);
   text-align: center;
   display: flex;
   align-items: start;
+  justify-content: space-between;
 }
 
 .band-info-name {
   margin: 0;
+}
+
+.join-button {
+  margin: 0;
+  font-size: large;
+  cursor: pointer;
+  height: 25px;
+  width: 8%;
+  border: 2px;
+  border-style: solid;
+  border-color: ghostwhite;
+  border-radius: 6px;
+  border-width: 2px;
 }
 
 .band-info {

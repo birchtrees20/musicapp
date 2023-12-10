@@ -1,9 +1,10 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onBeforeMount, watchEffect } from "vue";
 import { db } from "@/firebase/index.js";
 import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import SideBar from "@/components/SideBar.vue";
 import BandInfo from "@/components/BandInfo.vue";
+import { useRoute } from "vue-router";
 
 const bandName = ref();
 const bandInfo = ref();
@@ -11,6 +12,9 @@ const band = reactive({
   name: String,
   members: [],
 });
+
+const route = useRoute();
+const searchQuery = ref(route.query.search);
 
 const selected = ref("created");
 
@@ -27,8 +31,8 @@ async function getBand(id) {
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     band.name = docSnap.data().name;
+    band.info = docSnap.data().info;
     band.members = docSnap.data().members;
-    console.log(band);
     selected.value = id;
   } else {
     // docSnap.data() will be undefined in this case
@@ -45,6 +49,21 @@ async function createBand() {
   });
   console.log("Added new band");
 }
+
+watchEffect(() => {
+  const newSearchQuery = route.query.search;
+  if (newSearchQuery !== searchQuery.value) {
+    searchQuery.value = newSearchQuery;
+    getBand(newSearchQuery);
+  }
+});
+
+onBeforeMount(() => {
+  if (searchQuery.value) {
+    selected.value = searchQuery.value;
+    getBand(selected.value);
+  }
+});
 </script>
 
 <template>
@@ -77,7 +96,7 @@ async function createBand() {
         </div>
       </div>
       <div v-else class="create">
-        <BandInfo :key="band.id" :band="band"/>
+        <BandInfo :key="band.id" :band="band" />
       </div>
     </div>
     <div class="emptybar"></div>
