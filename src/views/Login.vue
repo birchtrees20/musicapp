@@ -1,6 +1,6 @@
 <template>
   <div class="auth">
-    <form class="register" @submit.prevent="register">
+    <!-- <form class="register" @submit.prevent="register">
       <h2>Register</h2>
       <input
         type="text"
@@ -19,9 +19,9 @@
         v-model="register_form.password"
       />
       <input type="submit" value="Register" />
-    </form>
+    </form> -->
 
-    <form class="login" @submit.prevent="login">
+    <!-- <form class="login" @submit.prevent="login">
       <h2>Login</h2>
       <input type="email" placeholder="Email" v-model="login_form.email" />
       <input
@@ -30,11 +30,29 @@
         v-model="login_form.password"
       />
       <input type="submit" value="Login" />
-    </form>
+    </form> -->
 
-    <!-- <form class="form_container" @submit.prevent="register">
+    <form class="form_container" @submit.prevent="register">
       <div class="title">Register</div>
       <br />
+      <label class="input_label">First Name</label>
+      <div class="input-container">
+        <input
+          type="text"
+          placeholder="First Name"
+          v-model="register_form.firstName"
+          class="input"
+        />
+      </div>
+      <label class="input_label">Last Name</label>
+      <div class="input-container">
+        <input
+          type="text"
+          placeholder="Last Name"
+          v-model="register_form.lastName"
+          class="input"
+        />
+      </div>
       <label class="input_label">Email</label>
       <div class="input-container">
         <input
@@ -54,7 +72,7 @@
         />
       </div>
       <button type="submit" class="login-button">Register</button>
-    </form> -->
+    </form>
 
     <form class="form_container" @submit.prevent="login">
       <div class="title">Login</div>
@@ -127,7 +145,7 @@ export default {
 }
 
 .form_container {
-  height: 50%;
+  height: 75%;
   width: 30%;
   display: flex;
   flex-direction: column;
