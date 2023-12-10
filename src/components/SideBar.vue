@@ -61,15 +61,6 @@ onMounted(async () => {
   padding-bottom: 10px;
 }
 
-.create-band {
-  cursor: pointer;
-  border-radius: 0.5rem;
-  border-width: 1px;
-  border-color: gray;
-  background-color: wheat;
-  margin-bottom: 1px;
-}
-
 .band-name {
   display: flex;
   padding-left: 20px;

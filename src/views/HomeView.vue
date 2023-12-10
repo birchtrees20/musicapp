@@ -1,14 +1,10 @@
 <template>
-    <SideBar @show="buttonClicked" />
-    <div class="body">
-      <h1>Home {{ userEmail }}</h1>
-    </div>
+  <h1>Home {{ userEmail }}</h1>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import { auth } from "../firebase";
-import SideBar from "@/components/SideBar.vue";
 
 const userEmail = ref("");
 

@@ -1,10 +1,13 @@
 <script setup>
-import { ref, reactive, onBeforeMount, watchEffect } from "vue";
+import { ref, reactive, onBeforeMount, onMounted, watchEffect } from "vue";
 import { db } from "@/firebase/index.js";
 import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import SideBar from "@/components/SideBar.vue";
 import BandInfo from "@/components/BandInfo.vue";
 import { useRoute } from "vue-router";
+import { auth } from "../firebase";
+
+const userEmail = ref("");
 
 const bandName = ref();
 const bandInfo = ref();
@@ -15,7 +18,6 @@ const band = reactive({
 
 const route = useRoute();
 const searchQuery = ref(route.query.search);
-
 const selected = ref("created");
 
 async function buttonClicked(newValue) {
@@ -58,6 +60,19 @@ watchEffect(() => {
   }
 });
 
+onMounted(() => {
+  // Add an authentication state observer
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in
+      userEmail.value = user.email;
+    } else {
+      // User is signed out
+      userEmail.value = "";
+    }
+  });
+});
+
 onBeforeMount(() => {
   if (searchQuery.value) {
     selected.value = searchQuery.value;
@@ -70,9 +85,10 @@ onBeforeMount(() => {
   <div class="layout">
     <SideBar @show="buttonClicked" />
     <div class="body">
-      <div v-if="selected === 'created'" class="create">
-        <div class="create-card">
-          <h2 class="card-title">
+      <div v-if="selected === 'created'" class="dis">
+        <div class="create-band">
+          <h2 class="create-title">
+            <h1>Hello {{ userEmail }}</h1>
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a New Band
           </h2>
@@ -95,7 +111,7 @@ onBeforeMount(() => {
           </form>
         </div>
       </div>
-      <div v-else class="create">
+      <div v-else class="dis">
         <BandInfo :key="band.id" :band="band" />
       </div>
     </div>
@@ -111,43 +127,27 @@ onBeforeMount(() => {
 }
 
 .body {
-  padding-left: 20px;
   display: flex;
   width: 70%;
 }
 
-.create {
+.dis {
   display: flex;
   width: 100%;
   justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.card-title {
+.create-band {
+  width: 60%;
   display: flex;
-  align-self: start;
+  flex-direction: column;
+  align-items: start;
 }
 
 form {
   width: 100%;
-}
-
-.input-container {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 14px;
-}
-
-.create-card {
-  height: 40%;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  padding: 50px 40px 20px 40px;
-  box-shadow: 0px 106px 42px rgba(0, 0, 0, 0.01),
-    0px 59px 36px rgba(0, 0, 0, 0.05), 0px 26px 26px rgba(0, 0, 0, 0.09),
-    0px 7px 15px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding-bottom: 100px;
 }
 
 .create-icon {
