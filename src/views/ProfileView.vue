@@ -1,20 +1,24 @@
 <template>
   <main>
-    <h1>{{ userName }} - Profile</h1>
-    <h1>{{ userProfileEmail }}</h1>
+    <div class="header-card">
+      <h2>{{ userName }}</h2>
+      <h4>{{ userProfileEmail }}</h4>
+    </div>
     <ul>
       <li v-for="band in currentUser" :key="band.id">
-        <h2>Bands:</h2>
+        <h3>Bands:</h3>
         <ul>
           <li v-for="item in band.bands" :key="item">
-            {{ item }}
-            <button
-              v-if="isCurrentUserProfile(band.userID)"
-              @click="removeBand(band.userID, item)"
-              class="remove-button"
-            >
-              -
-            </button>
+            <div class="profile-card">
+              {{ item }}
+              <button
+                v-if="isCurrentUserProfile(band.userID)"
+                @click="removeBand(band.userID, item)"
+                class="remove-button"
+              >
+                -
+              </button>
+            </div>
           </li>
         </ul>
       </li>
@@ -22,17 +26,19 @@
 
     <ul>
       <li v-for="instrument in currentUser" :key="instrument.id">
-        <h2>Instruments:</h2>
+        <h3>Instruments:</h3>
         <ul>
           <li v-for="item in instrument.instruments" :key="item">
-            {{ item }}
-            <button
-              v-if="isCurrentUserProfile(instrument.userID)"
-              @click="removeInstrument(instrument.userID, item)"
-              class="remove-button"
-            >
-              -
-            </button>
+            <div class="instrument-card">
+              {{ item }}
+              <button
+                v-if="isCurrentUserProfile(instrument.userID)"
+                @click="removeInstrument(instrument.userID, item)"
+                class="remove-button"
+              >
+                -
+              </button>
+            </div>
           </li>
         </ul>
       </li>
@@ -40,7 +46,7 @@
 
     <!-- Add instruments section -->
     <div v-if="isCurrentUserProfile(userID)">
-      <h2>Add Instruments:</h2>
+      <h3>Add Instruments:</h3>
       <input
         v-model="newInstrument"
         type="text"
@@ -193,19 +199,41 @@ main {
   margin: 0 auto;
 }
 
-h1 {
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
 ul {
   list-style: none;
   padding: 0;
 }
 
 li {
-  margin-bottom: 16px;
+  margin-bottom: 5px;
   position: relative; /* Added for positioning */
+}
+
+.header-card {
+  width: 100%;
+  padding-left: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--secondary);
+}
+
+.profile-card {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--secondary);
+}
+
+.instrument-card {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--secondary);
 }
 
 .remove-button,
@@ -230,11 +258,6 @@ li {
 input {
   padding: 8px;
   margin-right: 8px;
-}
-
-h2 {
-  font-size: 20px;
-  margin-bottom: 8px;
 }
 
 /* Add some spacing between elements */

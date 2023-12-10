@@ -139,7 +139,7 @@ onBeforeMount(() => {
     <div class="body">
       <div class="landing" v-if="!authenticated && selected === 'created'">
         <div class="col">
-          <h1 class="hello">Hello {{ name }}</h1>
+          <h1 class="hello">Hello!</h1>
           <div class="call-to-action">
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a new band or join one!
