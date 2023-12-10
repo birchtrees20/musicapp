@@ -1,29 +1,19 @@
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted, watchEffect } from "vue";
-import { db } from "@/firebase/index.js";
-import router from "@/router/index.js";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  doc,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { ref, reactive, onBeforeMount, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+
 import SideBar from "@/components/SideBar.vue";
 import BandInfo from "@/components/BandInfo.vue";
-import { useRoute } from "vue-router";
-import { auth } from "@/firebase/index.js";
+import UnauthenticatedCreate from "@/components/UnauthenticatedCreate.vue";
+import AuthenticatedCreate from "@/components/AuthenticatedCreate.vue";
+
+import { db, auth } from "@/firebase/index.js";
+import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const currentUserAuthID = ref("");
 const user = reactive({});
-const name = ref("");
 const authenticated = ref(false);
-
-const bandName = ref();
-const bandInfo = ref();
-const bandMembers = ref([]);
+const name = ref("");
 
 const band = reactive({
   name: String,
@@ -35,6 +25,7 @@ const route = useRoute();
 const searchQuery = ref(route.query.search);
 const selected = ref("created");
 
+//basically retrieves current user id
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUserAuthID.value = user.uid;
@@ -44,6 +35,7 @@ auth.onAuthStateChanged((user) => {
   }
 });
 
+//get current user
 async function getUser() {
   const docRef = doc(db, "users", currentUserAuthID.value);
   const docSnap = await getDoc(docRef);
@@ -53,16 +45,14 @@ async function getUser() {
     name.value = user.value.firstName;
     authenticated.value = true;
   } else {
-    // docSnap.data() will be undefined in this case
     console.log("No such document!");
   }
 }
 
-async function loginRedirect() {
-  router.push("/login");
-}
-
+//Retrieves value from event which will either be to
+//display band info or show the create band component
 async function buttonClicked(newValue) {
+  console.log("HERE")
   if (newValue !== "created") {
     await getBand(newValue);
   } else {
@@ -70,9 +60,9 @@ async function buttonClicked(newValue) {
   }
 }
 
+//Updates the band and the user collection
+//User adds new band, band adds new user
 async function joinBand(id) {
-  console.log("joining new band");
-
   const bandRef = doc(db, "bands", id);
   const bandSnapshot = await getDoc(bandRef);
   const currentMembers = bandSnapshot.data().members;
@@ -92,6 +82,7 @@ async function joinBand(id) {
   });
 }
 
+//Gets a band from Firebase with matching id
 async function getBand(id) {
   const docRef = doc(db, "bands", id);
   const docSnap = await getDoc(docRef);
@@ -101,22 +92,11 @@ async function getBand(id) {
     band.members = docSnap.data().members;
     selected.value = id;
   } else {
-    // docSnap.data() will be undefined in this case
     console.log("No such document!");
   }
 }
 
-async function createBand() {
-  const bandsRef = collection(db, "bands");
-  bandMembers.value.push(user.value);
-  await setDoc(doc(bandsRef, bandName.value), {
-    name: bandName.value,
-    members: bandMembers.value,
-    info: bandInfo.value,
-  });
-  console.log("Added new band");
-}
-
+//Fetches new band info when it detects that there is a new search
 watchEffect(() => {
   const newSearchQuery = route.query.search;
   if (newSearchQuery !== searchQuery.value) {
@@ -125,6 +105,7 @@ watchEffect(() => {
   }
 });
 
+//For when a user searches for a band
 onBeforeMount(() => {
   if (searchQuery.value) {
     selected.value = searchQuery.value;
@@ -137,45 +118,16 @@ onBeforeMount(() => {
   <div class="layout">
     <SideBar @show="buttonClicked" />
     <div class="body">
-      <div class="landing" v-if="!authenticated && selected === 'created'">
-        <div class="col">
-          <h1 class="hello">Hello!</h1>
-          <div>
-            <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
-            Create a new band or join one!
-          </div>
-          <button @click="loginRedirect" class="cta-button">
-            Login to start
-          </button>
-        </div>
+      <div v-if="!authenticated && selected === 'created'" class="landing">
+        <UnauthenticatedCreate />
       </div>
-      <div v-else-if="authenticated && selected === 'created'" class="dis">
-        <div class="create-band">
-          <h1 class="hello">Hello {{ name }}</h1>
-          <div class="extra-text">
-            <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
-            Create a new band or join one!
-          </div>
-          <form @submit.prevent="createBand">
-            <div class="input-container">
-              <label for="bandName">Band Name:</label>
-              <input v-model="bandName" type="text" class="input" required />
-            </div>
-            <div class="input-container">
-              <label for="bandInfo">Band Information:</label>
-              <textarea v-model="bandInfo" class="input" rows="4"></textarea>
-            </div>
-
-            <div class="form-buttons">
-              <button class="reset-button" type="reset" value="Reset">
-                Reset
-              </button>
-              <button class="create-button" type="submit">Create</button>
-            </div>
-          </form>
-        </div>
+      <div
+        v-else-if="authenticated && selected === 'created'"
+        class="bandCards"
+      >
+        <AuthenticatedCreate :name="name" :user="user"/>
       </div>
-      <div v-else class="dis">
+      <div v-else class="bandCards">
         <BandInfo
           @joinBand="joinBand"
           :key="band.id"
@@ -189,135 +141,42 @@ onBeforeMount(() => {
 </template>
 
 <style>
+/* layout splits the page into two parts (sidebar and body) */
 .layout {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
 
+/* body where band related things are displayed */
 .body {
   display: flex;
   width: 70%;
 }
 
-.hello {
-  font-size: 40px;
-}
-
-.extra-text {
-  font-size: x-large;
-  margin-bottom: 15px;
-}
-
-.cta-button {
-  margin-top: 30px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: var(--primary);
-  border: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-  background-color: #d89868;
-}
-
-.dis {
+/* Unauthenticated landing */
+.landing {
   display: flex;
-  width: 100%;
   justify-content: center;
+  width: 100%;
+}
+
+/* cards to display band info */
+.bandCards {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   padding-left: 20px;
   padding-right: 20px;
 }
 
-.landing {
-  width: 100%;
-  font-size: x-large;
-  display: flex;
-  justify-content: center;
-}
-
-.col {
-  display: flex;
-  flex-direction: column;
-}
-
-.create-band {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-}
-
-form {
-  width: 100%;
-}
-
+/* just to add space between icon and text */
 .create-icon {
   padding-right: 15px;
 }
 
-.input {
-  height: 40px;
-  border-radius: 7px;
-  outline: none;
-  border: 1px solid #e5e5e5;
-  filter: drop-shadow(0px 1px 0px #efefef)
-    drop-shadow(0px 1px 0.5px rgba(239, 239, 239, 0.5));
-  transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
-}
-
-.input:focus {
-  border: 1px solid transparent;
-  box-shadow: 0px 0px 0px 2px #242424;
-  background-color: transparent;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: end;
-}
-
-.reset-button {
-  border-radius: 5px;
-  border-width: 1px;
-  cursor: pointer;
-  width: 20%;
-  height: 40px;
-  border: 0;
-  background-color: var(--secondary);
-  border-radius: 6px;
-  color: white;
-}
-
-.reset-button:hover {
-  background-color: burlywood;
-}
-
-.create-button {
-  border-radius: 5px;
-  border-width: 1px;
-  cursor: pointer;
-  margin-left: 5px;
-  width: 20%;
-  height: 40px;
-  border: 0;
-  background-color: var(--primary);
-  border-radius: 6px;
-  color: white;
-}
-
-.create-button:hover {
-  background-color: var(--accent);
-}
-
+/* empty bar takes up right side of the screen (instead of a sidebar) 
+to make the screen proportional */
 .emptybar {
   height: 100vh;
   width: 15%;

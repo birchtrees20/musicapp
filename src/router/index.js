@@ -11,7 +11,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'band',
+      name: 'bands',
       component: () => import("@/views/BandsView.vue"),
       meta: {
         requiresAuth: false
