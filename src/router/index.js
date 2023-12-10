@@ -3,7 +3,6 @@ import { auth } from '../firebase'
 
 import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
-import AboutView from '../views/AboutView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import MembersView from '../views/MembersView.vue'
 import InstrumentView from '../views/InstrumentView.vue'
@@ -23,11 +22,6 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: AboutView
     },
     {
       path: '/members',

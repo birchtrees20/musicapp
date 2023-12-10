@@ -11,10 +11,8 @@ const store = useStore();
 const userID= ref('');
 
 onBeforeMount(() => {
-  store.dispatch('fetchUser');
+  store.dispatch("fetchUser");
 });
-
-
 
 onMounted(() => {
   // Add an authentication state observer
@@ -34,16 +32,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="logo">Project name</div>
+  <RouterLink class="logo" to="/"
+    ><font-awesome-icon
+      class="logo-icon"
+      :icon="['fas', 'guitar']"
+    />BandCollab</RouterLink
+  >
   <SearchBar class="search" />
   <div class="nav-routes">
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink to="/about">About</RouterLink>
-    <RouterLink to="/members">Members</RouterLink>
     <RouterLink to="/bands">Bands</RouterLink>
+    <RouterLink to="/members">Members</RouterLink>
     <RouterLink to="/instruments">Instruments</RouterLink>
-    <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`">Profile</RouterLink>
-    <RouterLink v-if="$store.state.user" to="/" @click="$store.dispatch('logout')">Logout</RouterLink>
+    <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`"
+      >Profile</RouterLink
+    >
+    <div
+      class="logout-button"
+      v-if="$store.state.user"
+      @click="$store.dispatch('logout')"
+    >
+      Logout
+    </div>
     <RouterLink v-else to="/login">Login</RouterLink>
   </div>
 </template>
@@ -55,6 +64,13 @@ onMounted(() => {
   width: 33%;
   display: flex;
   justify-content: start;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.logo .logo-icon {
+  padding-right: 10px;
 }
 
 .search {
@@ -70,8 +86,14 @@ onMounted(() => {
 
 .nav-routes a {
   text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: large;
+  margin-left: 15px;
+  color: black;
+}
+
+.logout-button {
+  cursor: pointer;
+  font-size: large;
   margin-left: 15px;
 }
 </style>

@@ -1,14 +1,12 @@
 <template>
-  <main>
-    <h1>Home {{ userEmail }}</h1>
-  </main>
+  <h1>Home {{ userEmail }}</h1>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { auth } from '../firebase';
+import { onMounted, ref } from "vue";
+import { auth } from "../firebase";
 
-const userEmail = ref('');
+const userEmail = ref("");
 
 onMounted(() => {
   // Add an authentication state observer
@@ -18,12 +16,8 @@ onMounted(() => {
       userEmail.value = user.email;
     } else {
       // User is signed out
-      userEmail.value = '';
+      userEmail.value = "";
     }
   });
 });
 </script>
-
-<style>
-
-</style>
