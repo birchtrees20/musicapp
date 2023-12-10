@@ -156,7 +156,7 @@
   }
   
   .remove-button, .add-button {
-    background-color: #ff6347; /* Tomato color */
+    background-color: red; /* Tomato color */
     color: #fff;
     padding: 8px 12px;
     border: none;
