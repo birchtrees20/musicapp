@@ -1,13 +1,13 @@
 <script setup>
-const props = defineProps(["band"]);
-
+const props = defineProps(["band", "authenticated"]);
+console.log(props.band.members)
 </script>
 
 <template>
   <div class="band-info-card">
     <div class="band-header">
       <h2 class="band-info-name">{{ props.band.name }}</h2>
-      <div @click="clickedJoin" class="join-button">Join</div>
+      <div v-if="props.authenticated" @click="$emit('joinBand', props.band.name)" class="join-button">Join</div>
     </div>
     <div class="band-info">
       <p>
@@ -18,7 +18,7 @@ const props = defineProps(["band"]);
       <h3>Band Members</h3>
       <ul>
         <li v-for="member in props.band.members" :key="member.id">
-          {{ member.firstName }}
+          {{ member.firstName }} {{ member.lastName }}
         </li>
       </ul>
     </div>

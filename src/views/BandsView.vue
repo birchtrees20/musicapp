@@ -1,7 +1,15 @@
 <script setup>
 import { ref, reactive, onBeforeMount, onMounted, watchEffect } from "vue";
 import { db } from "@/firebase/index.js";
-import { collection, getDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 import SideBar from "@/components/SideBar.vue";
 import BandInfo from "@/components/BandInfo.vue";
 import { useRoute } from "vue-router";
@@ -9,7 +17,8 @@ import { auth } from "@/firebase/index.js";
 
 const currentUserAuthID = ref("");
 const user = reactive({});
-const name = ref('');
+const name = ref("");
+const authenticated = ref(false);
 
 const bandName = ref();
 const bandInfo = ref();
@@ -35,14 +44,13 @@ auth.onAuthStateChanged((user) => {
 });
 
 async function getUser() {
-  console.log(currentUserAuthID.value);
   const docRef = doc(db, "users", currentUserAuthID.value);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
     user.value = docSnap.data();
     name.value = user.value.firstName;
-    console.log("Document data:", docSnap.data());
+    authenticated.value = true;
   } else {
     // docSnap.data() will be undefined in this case
     console.log("No such document!");
@@ -55,6 +63,15 @@ async function buttonClicked(newValue) {
   } else {
     selected.value = newValue;
   }
+}
+
+async function joinBand(id) {
+  console.log("joining new band")
+  const bandRef = doc(db, "bands", id);
+
+  await updateDoc(bandRef, {
+    members: arrayUnion(user.value),
+  });
 }
 
 async function getBand(id) {
@@ -73,7 +90,7 @@ async function getBand(id) {
 
 async function createBand() {
   const bandsRef = collection(db, "bands");
-  bandMembers.value.push(user.value)
+  bandMembers.value.push(user.value);
   await setDoc(doc(bandsRef, bandName.value), {
     name: bandName.value,
     members: bandMembers.value,
@@ -129,7 +146,12 @@ onBeforeMount(() => {
         </div>
       </div>
       <div v-else class="dis">
-        <BandInfo :key="band.id" :band="band" />
+        <BandInfo
+          @joinBand="joinBand"
+          :key="band.id"
+          :band="band"
+          :authenticated="authenticated"
+        />
       </div>
     </div>
     <div class="emptybar"></div>
