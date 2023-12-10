@@ -113,7 +113,7 @@ export default {
 }
 
 .form_container {
-  height: 75%;
+  height: 80%;
   width: 30%;
   display: flex;
   flex-direction: column;

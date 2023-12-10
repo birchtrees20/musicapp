@@ -71,24 +71,35 @@ async function redirectToProfile(id) {
 }
 
 .member {
+  display: inline-block;
   cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--secondary);
+  margin-right: 2px;
+}
+
+.member:hover {
+  background-color: var(--accent);
 }
 
 .join-button {
   margin: 0;
-  font-size: large;
+  font-size: medium;
   cursor: pointer;
   height: 25px;
   width: 8%;
-  border: 2px;
+  border: 1px;
   border-style: solid;
-  border-color: ghostwhite;
   border-radius: 6px;
   border-width: 2px;
+  background-color: var(--primary);
 }
 
 .join-button:hover {
-  background-color: rgb(80, 79, 79);
+  background-color: var(--accent);
 }
 
 .band-info {

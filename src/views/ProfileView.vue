@@ -46,13 +46,13 @@
 
     <!-- Add instruments section -->
     <div v-if="isCurrentUserProfile(userID)">
-      <h3>Add Instruments:</h3>
+      <h3>Add an Instrument:</h3>
       <input
         v-model="newInstrument"
         type="text"
         placeholder="Instrument name"
       />
-      <button @click="addInstrument">Add</button>
+      <button class="add-button" @click="addInstrument">Add</button>
     </div>
   </main>
 </template>
@@ -236,8 +236,7 @@ li {
   background-color: var(--secondary);
 }
 
-.remove-button,
-.add-button {
+.remove-button {
   background-color: red; /* Tomato color */
   color: #fff;
   padding: 8px 12px;
@@ -245,9 +244,19 @@ li {
   cursor: pointer;
 }
 
-.remove-button:hover,
-.add-button:hover {
+.remove-button:hover {
   background-color: #d2361e; /* Slightly darker shade on hover */
+}
+
+.add-button {
+  border-radius: 8px;
+  border-width: 1px;
+  cursor: pointer;
+  display: inline;
+  padding: 10px;
+  border: 0;
+  background-color: var(--primary);
+  color: white;
 }
 
 .remove-button {

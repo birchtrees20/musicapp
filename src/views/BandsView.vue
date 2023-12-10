@@ -82,7 +82,7 @@ async function joinBand(id) {
       members: arrayUnion(user.value),
     });
   } else {
-    console.log("User already in band")
+    console.log("User already in band");
   }
 
   const userRef = doc(db, "users", currentUserAuthID.value);
@@ -140,7 +140,7 @@ onBeforeMount(() => {
       <div class="landing" v-if="!authenticated && selected === 'created'">
         <div class="col">
           <h1 class="hello">Hello!</h1>
-          <div class="call-to-action">
+          <div>
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
             Create a new band or join one!
           </div>
@@ -151,11 +151,11 @@ onBeforeMount(() => {
       </div>
       <div v-else-if="authenticated && selected === 'created'" class="dis">
         <div class="create-band">
-          <h2 class="create-title">
-            <h1>Hello {{ name }}</h1>
+          <h1 class="hello">Hello {{ name }}</h1>
+          <div class="extra-text">
             <font-awesome-icon class="create-icon" :icon="['fas', 'hammer']" />
-            Create a New Band
-          </h2>
+            Create a new band or join one!
+          </div>
           <form @submit.prevent="createBand">
             <div class="input-container">
               <label for="bandName">Band Name:</label>
@@ -202,6 +202,11 @@ onBeforeMount(() => {
 
 .hello {
   font-size: 40px;
+}
+
+.extra-text {
+  font-size: x-large;
+  margin-bottom: 15px;
 }
 
 .cta-button {
@@ -287,9 +292,13 @@ textarea {
   width: 20%;
   height: 40px;
   border: 0;
-  background-color: red;
+  background-color: var(--secondary);
   border-radius: 6px;
   color: white;
+}
+
+.reset-button:hover {
+  background-color: burlywood;
 }
 
 .create-button {
@@ -300,9 +309,13 @@ textarea {
   width: 20%;
   height: 40px;
   border: 0;
-  background-color: blue;
+  background-color: var(--primary);
   border-radius: 6px;
   color: white;
+}
+
+.create-button:hover {
+  background-color: var(--accent);
 }
 
 .emptybar {
