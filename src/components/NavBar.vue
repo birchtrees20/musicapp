@@ -40,7 +40,7 @@ onMounted(() => {
   >
   <SearchBar class="search" />
   <div class="nav-routes">
-    <RouterLink to="/">Bands</RouterLink>
+    <RouterLink class="routerButton" to="/">Bands</RouterLink>
     <RouterLink to="/members">Members</RouterLink>
     <RouterLink v-if="$store.state.user" :to="`/profile/${userID}`"
       >Profile</RouterLink
@@ -88,6 +88,10 @@ onMounted(() => {
   font-size: large;
   margin-left: 15px;
   color: black;
+}
+
+.nav-routes a:hover {
+  color: var(--primary);
 }
 
 .logout-button {

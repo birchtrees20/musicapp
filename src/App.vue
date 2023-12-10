@@ -16,7 +16,6 @@ import NavBar from "./components/NavBar.vue";
 
 <style scoped>
 nav {
-  font-family: Helvetica, sans-serif;
   font-size: 12px;
   justify-content: space-between;
   padding-top: 5px;
@@ -34,7 +33,6 @@ nav {
 }
 
 body {
-  font-family: Helvetica, sans-serif;
   margin-left: 200px;
   margin-right: 200px;
 }

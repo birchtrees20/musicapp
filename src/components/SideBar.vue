@@ -44,7 +44,6 @@ onMounted(async () => {
   width: 15%;
   display: flex;
   flex-direction: column;
-  background-color: white;
   border-top-width: 0;
   border-bottom-width: 0;
   border-left-width: 0;
@@ -54,7 +53,6 @@ onMounted(async () => {
 }
 
 .side-title {
-  background-color: white;
   font-size: 13px;
   padding-left: 20px;
   padding-top: 10px;
@@ -64,6 +62,7 @@ onMounted(async () => {
 .band-name {
   display: flex;
   padding-left: 20px;
+  padding-right: 5px;
   font-size: 15px;
 }
 
@@ -81,6 +80,6 @@ onMounted(async () => {
   border-radius: 10px;
   border-style: solid;
   border-color: gray;
-  background-color: lightgrey;
+  background-color: var(--secondary);
 }
 </style>

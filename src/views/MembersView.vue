@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>All Members</h1>
+    <h3>All Members</h3>
 
     <div>
       <label for="nameSort">Name:</label>
@@ -27,7 +27,7 @@
         :to="{ name: 'profile', params: { userID: user.userID } }"
         class="member-tile"
       >
-        <h2>{{ user.firstName + " " + user.lastName }}</h2>
+        <h4>{{ user.firstName + " " + user.lastName }}</h4>
         <ul v-if="user.instruments.length > 0">
           <li v-for="instrument in user.instruments.sort()" :key="instrument">{{ instrument }}</li>
         </ul>

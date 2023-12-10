@@ -209,15 +209,14 @@ onBeforeMount(() => {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  background-color: blue;
-  color: white;
+  background-color: var(--primary);
   border: none;
   border-radius: 5px;
   transition: background-color 0.3s;
 }
 
 .cta-button:hover {
-  background-color: rgb(7, 7, 161);
+  background-color: #d89868;
 }
 
 .dis {

@@ -57,7 +57,7 @@ async function redirectToProfile(id) {
 }
 
 .band-header {
-  background-color: grey;
+  background-color: var(--primary);
   color: white;
   padding: 20px;
   text-align: center;

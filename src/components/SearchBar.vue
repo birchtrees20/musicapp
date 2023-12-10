@@ -65,7 +65,5 @@ async function getBand() {
   width: 100%;
   height: 40px;
   font-size: 14px;
-  color: #111827;
-  background-color: #f9fafb;
 }
 </style>
