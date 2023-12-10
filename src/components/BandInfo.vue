@@ -1,13 +1,29 @@
 <script setup>
+import router from "@/router/index.js";
+
 const props = defineProps(["band", "authenticated"]);
-console.log(props.band.members)
+console.log(props.band.members);
+
+async function redirectToProfile(id) {
+  console.log("Redirecting");
+  router.push({
+    name: "profile",
+    params: { userID: id },
+  });
+}
 </script>
 
 <template>
   <div class="band-info-card">
     <div class="band-header">
       <h2 class="band-info-name">{{ props.band.name }}</h2>
-      <div v-if="props.authenticated" @click="$emit('joinBand', props.band.name)" class="join-button">Join</div>
+      <div
+        v-if="props.authenticated"
+        @click="$emit('joinBand', props.band.name)"
+        class="join-button"
+      >
+        Join
+      </div>
     </div>
     <div class="band-info">
       <h3>Band Information</h3>
@@ -18,7 +34,12 @@ console.log(props.band.members)
     <div class="band-members">
       <h3>Band Members</h3>
       <ul>
-        <li v-for="member in props.band.members" :key="member.id">
+        <li
+          v-for="member in props.band.members"
+          :key="member.id"
+          class="member"
+          @click="redirectToProfile(member.userID)"
+        >
           {{ member.firstName }} {{ member.lastName }}
         </li>
       </ul>
@@ -47,6 +68,10 @@ console.log(props.band.members)
 
 .band-info-name {
   margin: 0;
+}
+
+.member {
+  cursor: pointer;
 }
 
 .join-button {
